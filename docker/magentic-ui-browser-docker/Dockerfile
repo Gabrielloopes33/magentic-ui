@@ -5,7 +5,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Define porta padrão para o Playwright WebSocket
 ENV PLAYWRIGHT_PORT=37367
 
-
 # Instala dependências do SO
 RUN apt-get update && \
     apt-get install -y \
@@ -69,15 +68,15 @@ ENV DISPLAY=":99"
 RUN mkdir -p /workspace
 WORKDIR /workspace
 
-# 8) Entrypoint
-COPY docker/magentic-ui-browser-docker/entrypoint.sh \
-     /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
+# 8) (Opcional) Mantém o entrypoint caso queira ainda executar algo antes
+# COPY docker/magentic-ui-browser-docker/entrypoint.sh \
+#      /usr/local/bin/entrypoint.sh
+# RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Metadados
 LABEL org.opencontainers.image.source="https://github.com/Gabrielloopes33/magentic-ui"
 LABEL org.opencontainers.image.description="Magentic UI Browser Docker container with Playwright and noVNC"
 LABEL org.opencontainers.image.licenses="MIT"
 
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-CMD ["/app/start.sh"]
+# Faz do supervisord o processo principal em primeiro plano
+ENTRYPOINT ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf", "-n"]
