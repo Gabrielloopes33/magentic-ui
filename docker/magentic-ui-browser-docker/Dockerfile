@@ -2,6 +2,9 @@ FROM node:lts-slim
 
 # Evita prompts interativos do apt
 ENV DEBIAN_FRONTEND=noninteractive
+# Define porta padrão para o Playwright WebSocket
+ENV PLAYWRIGHT_PORT=37367
+
 
 # Instala dependências do SO
 RUN apt-get update && \
